@@ -15,9 +15,9 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">PHONE NAME</label>
-                                <select name="phone_id" id="phoneSelect" class="form-control">
+                                <select name="phone_id" class="form-control" onchange="updateTotalAmount(this)">
                                     <?php foreach ($phones as $phone) : ?>
-                                        <option value="<?php echo $phone->id; ?>" <?php if ($phone->id == $r['phone_id']) echo 'selected'; ?>>
+                                        <option value="<?php echo $phone->id; ?>" data-price="<?php echo $phone->price; ?>" <?php if ($phone->id == $r['phone_id']) echo 'selected'; ?>>
                                             <?php echo $phone->name; ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -28,7 +28,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">TOTAL AMOUNT</label>
-                                <input type="text" id="totalAmount" value="<?php echo $r['total_amount']; ?>" class="form-control" name="total_amount">
+                                <input type="text" value="<?php echo $r['total_amount']; ?>" class="form-control" name="total_amount" id="total_amount">
                                 <?php if (isset($errors['total_amount'])) : ?>
                                     <p class="text-danger"><?php echo $errors['total_amount'] ?></p>
                                 <?php endif; ?>
@@ -46,37 +46,6 @@
                                     <p class="text-danger"><?php echo $errors['customer_id'] ?></p>
                                 <?php endif; ?>
                             </div>
-
-                            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                            <script>
-                                $(document).ready(function() {
-                                    // Lấy giá trị của trường total_amount và trường phone_id
-                                    var totalAmountField = document.getElementById('totalAmount');
-                                    var phoneSelectField = document.getElementById('phoneSelect');
-
-                                    // Xử lý sự kiện thay đổi của trường phone_id
-                                    phoneSelectField.addEventListener('change', function() {
-                                        // Lấy giá trị được chọn trong trường phone_id
-                                        var selectedPhoneId = this.value;
-
-                                        // Gửi yêu cầu Ajax để lấy thông tin về giá trị total_amount từ server
-                                        $.ajax({
-                                            url: '?controller=order&action=update', // Đường dẫn tới phương thức xử lý getTotalAmount trong controller
-                                            type: 'GET',
-                                            data: {
-                                                phone_id: selectedPhoneId
-                                            },
-                                            success: function(response) {
-                                                // Cập nhật giá trị của trường total_amount
-                                                totalAmountField.value = response;
-                                            },
-                                            error: function() {
-                                                // Xử lý lỗi (nếu có)
-                                            }
-                                        });
-                                    });
-                                });
-                            </script>
                             <button type="submit" class="btn btn-primary">SAVE</button>
                             <a type="button" href="?controller=order&action=index" class="btn btn-secondary">BACK</a>
                         </form>
@@ -87,3 +56,10 @@
         <!-- END: @yield('content') -->
     </div>
     <!-- @include('includes.footer') -->
+    <script>
+        function updateTotalAmount(selectElement) {
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+            var price = selectedOption.getAttribute('data-price');
+            document.getElementById('total_amount').value = price;
+        }
+    </script>

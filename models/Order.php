@@ -13,7 +13,7 @@ class Order
             $conditions = [];
 
             if (!empty(trim($s))) {
-                $conditions[] = "(orders.order_date LIKE '%$s%' OR orders.total_amount LIKE '%$s%' OR orders.phone_id LIKE '%$s%' OR orders.customer_id LIKE '%$s%')";
+                $conditions[] = "(customers.name LIKE '%$s%' OR phones.name LIKE '%$s%' OR orders.order_date LIKE '%$s%' OR orders.total_amount LIKE '%$s%')";
             }
 
             if (!empty(trim($s1))) {
@@ -23,9 +23,9 @@ class Order
             $conditionsString = implode(" OR ", $conditions);
 
             $sql = "SELECT orders.*, customers.name AS customer_name, phones.name AS phone_name
-                    FROM orders
-                    JOIN customers ON orders.customer_id = customers.id
-                    JOIN phones ON orders.phone_id = phones.id";
+                FROM orders
+                JOIN customers ON orders.customer_id = customers.id
+                JOIN phones ON orders.phone_id = phones.id";
 
             if (!empty($conditionsString)) {
                 $sql .= " WHERE $conditionsString";
@@ -33,22 +33,29 @@ class Order
 
             $sql .= " ORDER BY orders.id DESC";
         } else {
+            $s = "";
+            $s1 = "";
             $sql = "SELECT orders.*, customers.name AS customer_name, phones.name AS phone_name
-                    FROM orders
-                    JOIN customers ON orders.customer_id = customers.id
-                    JOIN phones ON orders.phone_id = phones.id
-                    ORDER BY orders.id DESC";
+                FROM orders
+                JOIN customers ON orders.customer_id = customers.id
+                JOIN phones ON orders.phone_id = phones.id
+                ORDER BY orders.id DESC";
         }
-
-
-
-
 
         $ordersPerPage = 4;
         $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start_index = ($current_page - 1) * $ordersPerPage;
 
-        $sql_count = "SELECT COUNT(*) AS total_records FROM orders";
+        // Thay đổi câu truy vấn đếm tổng số bản ghi phù hợp với điều kiện tìm kiếm
+        $sql_count = "SELECT COUNT(*) AS total_records
+                  FROM orders
+                  JOIN customers ON orders.customer_id = customers.id
+                  JOIN phones ON orders.phone_id = phones.id";
+
+        if (!empty($conditionsString)) {
+            $sql_count .= " WHERE $conditionsString";
+        }
+
         $stmt_count = $conn->query($sql_count);
         $total_records = $stmt_count->fetch(PDO::FETCH_ASSOC)['total_records'];
 
@@ -60,7 +67,9 @@ class Order
             'orders' => $orders,
             'total_records' => $total_records,
             'current_page' => $current_page,
-            'orders_per_page' => $ordersPerPage
+            'orders_per_page' => $ordersPerPage,
+            'search_s' => $s, // Thêm biến search_s để giữ lại giá trị của tham số tìm kiếm s
+            'search_s1' => $s1, // Thêm biến search_s1 để giữ lại giá trị của tham số tìm kiếm s1
         ];
 
         // Trả về cho Model

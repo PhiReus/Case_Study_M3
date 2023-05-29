@@ -30,6 +30,8 @@ class Customer
 
             $sql .= " ORDER BY id DESC";
         } else {
+            $s = "";
+            $s1 = "";
             $sql = "SELECT * FROM `customers` ORDER BY id DESC";
         }
 
@@ -41,6 +43,11 @@ class Customer
         $start_index = ($current_page - 1) * $customersPerPage;
 
         $sql_count = "SELECT COUNT(*) AS total_records FROM customers";
+
+        if (!empty($conditionsString)) {
+            $sql_count .= " WHERE $conditionsString";
+        }
+
         $stmt_count = $conn->query($sql_count);
         $total_records = $stmt_count->fetch(PDO::FETCH_ASSOC)['total_records'];
 
@@ -52,7 +59,9 @@ class Customer
             'customers' => $customers,
             'total_records' => $total_records,
             'current_page' => $current_page,
-            'customers_per_page' => $customersPerPage
+            'customers_per_page' => $customersPerPage,
+            'search_s' => $s, // Thêm biến search_s để giữ lại giá trị của tham số tìm kiếm s
+            'search_s1' => $s1, // Thêm biến search_s1 để giữ lại giá trị của tham số tìm kiếm s1
         ];
 
         // Trả về cho Model

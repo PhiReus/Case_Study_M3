@@ -1,4 +1,3 @@
-
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="row">
@@ -15,16 +14,16 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">TOTAL AMOUNT</label>
-                                <input type="text" class="form-control" name="total_amount">
+                                <input type="text" class="form-control" name="total_amount" id="total_amount">
                                 <?php if (isset($errors['total_amount'])) : ?>
                                     <p class="text-danger"><?php echo $errors['total_amount'] ?></p>
                                 <?php endif; ?>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">PHONE NAME</label>
-                                <select name="phone_id" class="form-control">
+                                <select name="phone_id" class="form-control" onchange="updateTotalAmount(this)">
                                     <?php foreach ($phones as $phone) : ?>
-                                        <option value="<?php echo $phone->id; ?>"><?php echo $phone->name; ?></option>
+                                        <option value="<?php echo $phone->id; ?>" data-price="<?php echo $phone->price; ?>"><?php echo $phone->name; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -43,7 +42,13 @@
                 </div>
             </div>
         </div>
-        <!-- END: @yield('content') -->
     </div>
-</div> 
-<!-- @include('includes.footer') -->
+</div>
+
+<script>
+function updateTotalAmount(selectElement) {
+    var selectedOption = selectElement.options[selectElement.selectedIndex];
+    var price = selectedOption.getAttribute('data-price');
+    document.getElementById('total_amount').value = price;
+}
+</script>

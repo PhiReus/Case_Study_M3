@@ -24,39 +24,50 @@ class OrderController
     {
         $orders = Order::create();
         $phones = Phone::create();
+        // var_dump($phones);
+        // die();
         $customers = Customer::create();
         // var_dump($teams1);
         // die();
         require_once 'views/orders/create.php';
     }
     // Xu ly them moi
-    public function store()
-    {
-        $errors = array();
-        // $data = array();
+   public function store()
+{
+    $errors = [];
 
-        // Lấy dữ liệu
-        $order_date = isset($_POST['order_date']) ? $_POST['order_date'] : '';
-        if (empty($order_date)) {
-            $errors['order_date'] = 'Bạn chưa nhập ngày';
-        }
-        $total_amount = isset($_POST['total_amount']) ? $_POST['total_amount'] : '';
-        if (empty($total_amount)) {
-            $errors['total_amount'] = 'Bạn chưa nhập số tiền';
-        }
-
-        // Lưu dữ liệu
-        if (count($errors) == 0) {
-            // Goi model
-            Order::store($_POST);
-
-            // Chuyen huong ve trang danh sach
-            header("Location: index.php?controller=order&action=index&success=1");
-            exit();
-        } else {
-            require_once 'views/orders/create.php';
-        }
+    // Xác thực dữ liệu đầu vào
+    $order_date = isset($_POST['order_date']) ? $_POST['order_date'] : '';
+    if (empty($order_date)) {
+        $errors['order_date'] = 'Bạn chưa nhập ngày';
     }
+
+    $total_amount = isset($_POST['total_amount']) ? $_POST['total_amount'] : '';
+    if (empty($total_amount)) {
+        $errors['total_amount'] = 'Bạn chưa nhập số tiền';
+    }
+
+    // Nếu không có lỗi xác thực, tiến hành lưu dữ liệu
+    if (empty($errors)) {
+        // Chuẩn bị dữ liệu để lưu
+        $data = [
+            'order_date' => $order_date,
+            'total_amount' => $total_amount,
+            'phone_id' => isset($_POST['phone_id']) ? $_POST['phone_id'] : '',
+            'customer_id' => isset($_POST['customer_id']) ? $_POST['customer_id'] : '',
+        ];
+
+        // Gọi model để lưu dữ liệu
+        Order::store($data);
+
+        // Chuyển hướng về trang danh sách với thông báo thành công
+        header("Location: index.php?controller=order&action=index&success=1");
+        exit();
+    } else {
+        // Hiển thị form với thông báo lỗi
+        require_once 'views/orders/create.php';
+    }
+}
     // Hien thi form chinh sua
     public function edit()
     {

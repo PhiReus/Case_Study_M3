@@ -120,37 +120,38 @@
                             </table>
                         </div>
                     </div>
-                    <?php if ($phones['total_records'] > $phones['phones_per_page']) : ?>
-                        <div class="pagination justify-content-center">
-                            <?php
+                    <<?php if ($phones['total_records'] > $phones['phones_per_page']) : ?> <div class="pagination justify-content-center">
+                        <?php
                             $total_pages = ceil($phones['total_records'] / $phones['phones_per_page']);
                             $visible_pages = min($total_pages, 3);
                             $start_page = max(1, $phones['current_page'] - 1);
                             $end_page = min($start_page + $visible_pages - 1, $total_pages);
-                            ?>
+                        ?>
 
-                            <?php if ($phones['current_page'] > 1) : ?>
-                                <a class="page-link" href="?page=<?php echo $phones['current_page'] - 1; ?>" aria-label="Trang trước">
-                                    <span aria-hidden="true">&laquo;</span>
+                        <?php if ($phones['current_page'] > 1) : ?>
+                            <a class="page-link" href="?page=<?php echo $phones['current_page'] - 1; ?><?php if (!empty($phones['search_s'])) echo '&s=' . urlencode($phones['search_s']); ?><?php if (!empty($phones['search_s1'])) echo '&s1=' . urlencode($phones['search_s1']); ?>" aria-label="Trang trước">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        <?php endif; ?>
+
+                        <?php for ($i = $start_page; $i <= $end_page; $i++) : ?>
+                            <?php if ($i == $phones['current_page']) : ?>
+                                <a class="page-link active" href="?page=<?php echo $i; ?><?php if (!empty($phones['search_s'])) echo '&s=' . urlencode($phones['search_s']); ?><?php if (!empty($phones['search_s1'])) echo '&s1=' . urlencode($phones['search_s1']); ?>"><?php echo $i; ?></a>
+                            <?php else : ?>
+                                <a class="page-link" href="?page=<?php echo $i; ?><?php if (!empty($phones['search_s'])) echo '&s=' . urlencode($phones['search_s']); ?><?php if (!empty($phones['search_s1'])) echo '&s1=' . urlencode($phones['search_s1']); ?>">
+                                    <?php echo $i; ?>
                                 </a>
                             <?php endif; ?>
+                        <?php endfor; ?>
 
-                            <?php for ($i = $start_page; $i <= $end_page; $i++) : ?>
-                                <?php if ($i == $phones['current_page']) : ?>
-                                    <a class="page-link active" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                <?php else : ?>
-                                    <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                                <?php endif; ?>
-                            <?php endfor; ?>
-
-                            <?php if ($phones['current_page'] < $total_pages) : ?>
-                                <a class="page-link" href="?page=<?php echo $phones['current_page'] + 1; ?>" aria-label="Trang sau">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            <?php endif; ?>
-                        </div>
-                    <?php endif; ?>
+                        <?php if ($phones['current_page'] < $total_pages) : ?>
+                            <a class="page-link" href="?page=<?php echo $phones['current_page'] + 1; ?><?php if (!empty($phones['search_s'])) echo '&s=' . urlencode($phones['search_s']); ?><?php if (!empty($phones['search_s1'])) echo '&s1=' . urlencode($phones['search_s1']); ?>" aria-label="Trang sau">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        <?php endif; ?>
                 </div>
+            <?php endif; ?>
             </div>
         </div>
     </div>
+</div>

@@ -60,7 +60,7 @@
                             </div>
 
                             <div class="row">
-                            <div class="col">
+                                <div class="col">
                                     <input type="text" placeholder="Nhập ID" class="form-control" name="s1" />
                                     <input type="hidden" name="controller" value="customer"> <!-- Thêm dòng này để truyền tham số controller -->
                                     <input type="hidden" name="action" value="index"> <!-- Thêm dòng này để truyền tham số action -->
@@ -70,7 +70,7 @@
                                     <input type="hidden" name="controller" value="customer"> <!-- Thêm dòng này để truyền tham số controller -->
                                     <input type="hidden" name="action" value="index"> <!-- Thêm dòng này để truyền tham số action -->
                                 </div>
-                                
+
                                 <div class="col">
                                     <button type="submit" class="btn btn-secondary "> Tìm </button>
                                     <a href="index.php?controller=customer&action=index" class="btn btn-info"> Đặt lại </a>
@@ -130,21 +130,23 @@
                             ?>
 
                             <?php if ($customers['current_page'] > 1) : ?>
-                                <a class="page-link" href="?controller=customer&action=index&page=<?php echo $customers['current_page'] - 1; ?>" aria-label="Trang trước">
+                                <a class="page-link" href="?controller=customer&action=index&page=<?php echo $customers['current_page'] - 1; ?><?php if (!empty($customers['search_s'])) echo '&s=' . urlencode($customers['search_s']); ?><?php if (!empty($customers['search_s1'])) echo '&s1=' . urlencode($customers['search_s1']); ?>" aria-label="Trang trước">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             <?php endif; ?>
 
                             <?php for ($i = $start_page; $i <= $end_page; $i++) : ?>
                                 <?php if ($i == $customers['current_page']) : ?>
-                                    <a class="page-link active" href="?controller=customer&action=index&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                    <a class="page-link active" href="?controller=customer&action=index&page=<?php echo $i; ?><?php if (!empty($customers['search_s'])) echo '&s=' . urlencode($customers['search_s']); ?><?php if (!empty($customers['search_s1'])) echo '&s1=' . urlencode($customers['search_s1']); ?>"><?php echo $i; ?></a>
                                 <?php else : ?>
-                                    <a class="page-link" href="?controller=customer&action=index&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                    <a class="page-link" href="?controller=customer&action=index&page=<?php echo $i; ?><?php if (!empty($customers['search_s'])) echo '&s=' . urlencode($customers['search_s']); ?><?php if (!empty($customers['search_s1'])) echo '&s1=' . urlencode($customers['search_s1']); ?>">
+                                        <?php echo $i; ?>
+                                    </a>
                                 <?php endif; ?>
                             <?php endfor; ?>
 
                             <?php if ($customers['current_page'] < $total_pages) : ?>
-                                <a class="page-link" href="?controller=customer&action=index&page=<?php echo $customers['current_page'] + 1; ?>" aria-label="Trang sau">
+                                <a class="page-link" href="?controller=customer&action=index&page=<?php echo $customers['current_page'] + 1; ?><?php if (!empty($customers['search_s'])) echo '&s=' . urlencode($customers['search_s']); ?><?php if (!empty($customers['search_s1'])) echo '&s1=' . urlencode($customers['search_s1']); ?>" aria-label="Trang sau">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             <?php endif; ?>

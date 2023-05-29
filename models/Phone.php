@@ -11,41 +11,47 @@ class Phone
             $s = isset($_GET["s"]) ? $_GET["s"] : "";
             $s1 = isset($_GET["s1"]) ? $_GET["s1"] : "";
             $conditions = [];
-        
+
             if (!empty(trim($s))) {
-                $conditions[] = "(phones.name LIKE '%$s%' OR phones.color LIKE '%$s%' OR phones.id LIKE '%$s%')";
+                $conditions[] = "(phones.name LIKE '%$s%' OR brands.name LIKE '%$s%' OR phones.color LIKE '%$s%' OR phones.price LIKE '%$s%')";
             }
-        
+
             if (!empty(trim($s1))) {
                 $conditions[] = "phones.id LIKE '%$s1%'";
             }
-        
+
             $conditionsString = implode(" OR ", $conditions);
-        
+
             $sql = "SELECT phones.*, brands.name AS brand_name
                 FROM phones
                 JOIN brands ON phones.brand_id = brands.id";
-        
+
             if (!empty($conditionsString)) {
                 $sql .= " WHERE $conditionsString";
             }
-        
+
             $sql .= " ORDER BY phones.id DESC";
         } else {
+            $s = "";
+            $s1 = "";
             $sql = "SELECT phones.*, brands.name AS brand_name
                 FROM phones
                 JOIN brands ON phones.brand_id = brands.id
                 ORDER BY phones.id DESC";
         }
-        
-        
-        
 
         $phonesPerPage = 4;
         $current_page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $start_index = ($current_page - 1) * $phonesPerPage;
 
-        $sql_count = "SELECT COUNT(*) AS total_records FROM phones";
+        // Thay đổi câu truy vấn đếm tổng số bản ghi phù hợp với điều kiện tìm kiếm
+        $sql_count = "SELECT COUNT(*) AS total_records FROM phones
+                JOIN brands ON phones.brand_id = brands.id";
+
+        if (!empty($conditionsString)) {
+            $sql_count .= " WHERE $conditionsString";
+        }
+
         $stmt_count = $conn->query($sql_count);
         $total_records = $stmt_count->fetch(PDO::FETCH_ASSOC)['total_records'];
 
@@ -57,12 +63,15 @@ class Phone
             'phones' => $phones,
             'total_records' => $total_records,
             'current_page' => $current_page,
-            'phones_per_page' => $phonesPerPage
+            'phones_per_page' => $phonesPerPage,
+            'search_s' => $s, // Thêm biến search_s để giữ lại giá trị của tham số tìm kiếm s
+            'search_s1' => $s1, // Thêm biến search_s1 để giữ lại giá trị của tham số tìm kiếm s1
         ];
 
         // Trả về cho Model
         return $data;
     }
+
 
 
     // lay chi tiet 1 du lieu

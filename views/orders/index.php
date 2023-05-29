@@ -131,26 +131,29 @@
                             ?>
 
                             <?php if ($orders['current_page'] > 1) : ?>
-                                <a class="page-link" href="?controller=order&action=index&page=<?php echo $orders['current_page'] - 1; ?>" aria-label="Trang trước">
+                                <a class="page-link" href="?controller=order&action=index&page=<?php echo $orders['current_page'] - 1; ?><?php if (!empty($orders['search_s'])) echo '&s=' . urlencode($orders['search_s']); ?><?php if (!empty($orders['search_s1'])) echo '&s1=' . urlencode($orders['search_s1']); ?>" aria-label="Trang trước">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             <?php endif; ?>
 
                             <?php for ($i = $start_page; $i <= $end_page; $i++) : ?>
                                 <?php if ($i == $orders['current_page']) : ?>
-                                    <a class="page-link active" href="?controller=order&action=index&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                    <a class="page-link active" href="?controller=order&action=index&page=<?php echo $i; ?><?php if (!empty($orders['search_s'])) echo '&s=' . urlencode($orders['search_s']); ?><?php if (!empty($orders['search_s1'])) echo '&s1=' . urlencode($orders['search_s1']); ?>"><?php echo $i; ?></a>
                                 <?php else : ?>
-                                    <a class="page-link" href="?controller=order&action=index&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                                    <a class="page-link" href="?controller=order&action=index&page=<?php echo $i; ?><?php if (!empty($orders['search_s'])) echo '&s=' . urlencode($orders['search_s']); ?><?php if (!empty($orders['search_s1'])) echo '&s1=' . urlencode($orders['search_s1']); ?>">
+                                        <?php echo $i; ?>
+                                    </a>
                                 <?php endif; ?>
                             <?php endfor; ?>
 
                             <?php if ($orders['current_page'] < $total_pages) : ?>
-                                <a class="page-link" href="?controller=order&action=index&page=<?php echo $orders['current_page'] + 1; ?>" aria-label="Trang sau">
+                                <a class="page-link" href="?controller=order&action=index&page=<?php echo $orders['current_page'] + 1; ?><?php if (!empty($orders['search_s'])) echo '&s=' . urlencode($orders['search_s']); ?><?php if (!empty($orders['search_s1'])) echo '&s1=' . urlencode($orders['search_s1']); ?>" aria-label="Trang sau">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
+
                 </div>
             </div>
         </div>

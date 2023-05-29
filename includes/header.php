@@ -72,12 +72,7 @@ ob_start(); // Start output buffering
 						</ul>
 					</div>
 				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="pages/icons/mdi.html">
-						<i class="mdi mdi-contacts menu-icon"></i>
-						<span class="menu-title">Icons</span>
-					</a>
-				</li>
+				
 				<!-- Add more menu items as needed -->
 			</ul>
 		</nav>
